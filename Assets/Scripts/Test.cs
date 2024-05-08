@@ -6,11 +6,11 @@ public class Test : MonoBehaviour
 {
     void Start()
     {
-        Debug.Log(SO_GamePreferences.Entity.Resolution);
+
     }
 
     void Update()
     {
-        
+
     }
 }
