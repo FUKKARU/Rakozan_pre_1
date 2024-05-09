@@ -28,6 +28,9 @@ public class SO_GamePreferences : ScriptableObject
     }
     #endregion
 
-    public Vector2Int Resolution;
-    public bool IsFullScreen;
+    [SerializeField] Vector2Int resolution;
+    public Vector2Int Resolution => resolution;
+
+    [SerializeField] bool isFullScreen;
+    public bool IsFullScreen => isFullScreen;
 }
