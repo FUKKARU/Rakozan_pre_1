@@ -61,9 +61,9 @@ public class TitleMethods : MonoBehaviour
 
         Tutorial.onClick.AddListener(() => { Methods.StageSelect_StageSelect(_Difficulty); selectedStage = "Tutorial"; });
         GameStage.onClick.AddListener(() => { Methods.StageSelect_StageSelect(_Difficulty); selectedStage = "Game"; });
-        Easy.onClick.AddListener(() => Methods.StageSelect_DifficultySelect(0));
-        Normal.onClick.AddListener(() => Methods.StageSelect_DifficultySelect(1));
-        Hard.onClick.AddListener(() => Methods.StageSelect_DifficultySelect(2));
+        Easy.onClick.AddListener(() => Methods.StageSelect_DifficultySelect(selectedStage, 0));
+        Normal.onClick.AddListener(() => Methods.StageSelect_DifficultySelect(selectedStage, 1));
+        Hard.onClick.AddListener(() => Methods.StageSelect_DifficultySelect(selectedStage, 2));
     }
 
     void Update()

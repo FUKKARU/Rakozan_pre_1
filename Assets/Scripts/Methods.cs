@@ -35,10 +35,10 @@ public static class Methods
         difficultyUI.SetActive(true);
     }
 
-    public static void StageSelect_DifficultySelect(int dif)
+    public static void StageSelect_DifficultySelect(string sceneName, int dif)
     {
         Difficulty.Dif = dif;
-        SceneManager.LoadScene("Game");
+        SceneManager.LoadScene(sceneName);
     }
 
     public static void Menu_Close(GameObject menuUI)
