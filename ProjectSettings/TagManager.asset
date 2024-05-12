@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - ConfigButton
+  - BookButton
+  - ConfigUI
+  - BookUI
+  - BookItem
+  - DescriptionUI
   layers:
   - Default
   - TransparentFX

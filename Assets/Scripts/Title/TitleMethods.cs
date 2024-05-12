@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Ex;
 
 public class TitleMethods : MonoBehaviour
 {
@@ -11,7 +12,9 @@ public class TitleMethods : MonoBehaviour
     public Button GameStart;
     public GameObject StageSelect;
     public Button ShowMenu;
-    public GameObject Menu;
+    public GameObject MenuPrfb;
+    GameObject Menu = null;
+    public GameObject MenuParent;
     public Button Quit;
     [Space(25)]
     public Button Tutorial;
@@ -21,18 +24,39 @@ public class TitleMethods : MonoBehaviour
     public Button Normal;
     public Button Hard;
     [Space(25)]
-    public Button Config;
-    public Button Book;
-    public GameObject _Config;
-    public GameObject _Book;
+    Button Config = null;
+    Button Book = null;
+    GameObject _Config = null;
+    GameObject _Book = null;
     [Space(25)]
-    public Button[] BookItems;
-    public GameObject Description;
+    GameObject[] BookItems = null;
+    GameObject Description = null;
 
     void Start()
     {
         GameStart.onClick.AddListener(() => Methods.Title_GameStart(StageSelect));
-        ShowMenu.onClick.AddListener(() => Methods.Title_ShowMenu(Menu));
+        if (Menu == null)
+        {
+            Menu = Instantiate(MenuPrfb, MenuParent.transform);
+            Config = "ConfigButton".FindTag().GetComponent<Button>();
+            Book = "BookButton".FindTag().GetComponent<Button>();
+            _Config = "ConfigUI".FindTag();
+            _Book = "BookUI".FindTag();
+            BookItems = "BookItem".FindsTag();
+            Description = "DescriptionUI".FindTag();
+
+            _Book.SetActive(false);
+            Menu.SetActive(false);
+            Description.SetActive(false);
+
+            ShowMenu.onClick.AddListener(() => Methods.Title_ShowMenu(Menu));
+            Config.onClick.AddListener(() => Methods.Menu_Config(_Config, _Book));
+            Book.onClick.AddListener(() => Methods.Menu_Book(_Config, _Book));
+            foreach (GameObject bookItem in BookItems)
+            {
+                bookItem.GetComponent<Button>().onClick.AddListener(() => Methods.Menu_Book_ShowDescription(Description, bookItem.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text));
+            }
+        }
         Quit.onClick.AddListener(() => Methods.Title_Quit());
 
         Tutorial.onClick.AddListener(() => { Methods.StageSelect_StageSelect(_Difficulty); selectedStage = "Tutorial"; });
@@ -40,14 +64,6 @@ public class TitleMethods : MonoBehaviour
         Easy.onClick.AddListener(() => Methods.StageSelect_DifficultySelect(0));
         Normal.onClick.AddListener(() => Methods.StageSelect_DifficultySelect(1));
         Hard.onClick.AddListener(() => Methods.StageSelect_DifficultySelect(2));
-
-        Config.onClick.AddListener(() => Methods.Menu_Config(_Config, _Book));
-        Book.onClick.AddListener(() => Methods.Menu_Book(_Config, _Book));
-
-        foreach (Button bookItem in BookItems)
-        {
-            bookItem.onClick.AddListener(() => Methods.Menu_Book_ShowDescription(Description, bookItem.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text));
-        }
     }
 
     void Update()
@@ -57,14 +73,17 @@ public class TitleMethods : MonoBehaviour
             Methods.StageSelect_Close(StageSelect);
         }
 
-        if (Menu.activeSelf && !Description.activeSelf && Input.GetMouseButtonDown(1))
+        if (Menu != null && Description != null)
         {
-            Methods.Menu_Close(Menu);
-        }
+            if (Menu.activeSelf && !Description.activeSelf && Input.GetMouseButtonDown(1))
+            {
+                Methods.Menu_Close(Menu);
+            }
 
-        if (Menu.activeSelf && Description.activeSelf && Input.GetMouseButtonDown(1))
-        {
-            Methods.Menu_Book_CloseDescription(Description);
+            if (Menu.activeSelf && Description.activeSelf && Input.GetMouseButtonDown(1))
+            {
+                Methods.Menu_Book_CloseDescription(Description);
+            }
         }
     }
 }
