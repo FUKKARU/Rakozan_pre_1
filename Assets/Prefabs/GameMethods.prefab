@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 359760595356266311}
   m_Layer: 0
   m_Name: GameMethods
-  m_TagString: Untagged
+  m_TagString: GameMethods
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -46,4 +46,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MenuPrfb: {fileID: 7779640754053372533, guid: 81f8216208933d64698bfebf4bcb2dc7,
     type: 3}
-  MenuParent: {fileID: 0}

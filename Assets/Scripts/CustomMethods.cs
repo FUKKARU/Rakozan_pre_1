@@ -162,7 +162,7 @@ namespace Ex
             return ret;
         }
 
-        public static List<(int, T)> Enumerate<T>(this List<T> self)
+        public static List<(int, T)> Enumerate<T>(List<T> self)
         {
             List<(int, T)> ret = new();
             for (int i = 0; i < self.Count; i++)

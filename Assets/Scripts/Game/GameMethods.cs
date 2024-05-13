@@ -1,4 +1,5 @@
 using Ex;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,7 +8,7 @@ using UnityEngine.UI;
 
 public class GameMethods : MonoBehaviour
 {
-    GameObject Escape;
+    [NonSerialized] public GameObject Escape;
     TextMeshProUGUI _Time;
     Button ShowMenu;
     public GameObject MenuPrfb;

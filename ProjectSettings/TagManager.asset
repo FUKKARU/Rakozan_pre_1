@@ -18,6 +18,7 @@ TagManager:
   - TitleYesButton_Game
   - TitleNoButton_Game
   - ConfirmationUI
+  - GameMethods
   layers:
   - Default
   - TransparentFX
