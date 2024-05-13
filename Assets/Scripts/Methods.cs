@@ -68,4 +68,14 @@ public static class Methods
     {
         descriptionUI.SetActive(false);
     }
+
+    public static void Game_ShowEscape(GameObject escapeUI)
+    {
+        escapeUI.SetActive(true);
+    }
+
+    public static void Game_HideEscape(GameObject escapeUI)
+    {
+        escapeUI.SetActive(false);
+    }
 }

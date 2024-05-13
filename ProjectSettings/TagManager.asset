@@ -10,6 +10,10 @@ TagManager:
   - BookUI
   - BookItem
   - DescriptionUI
+  - TimeText_Game
+  - MenuButton_Game
+  - TitleButton_Game
+  - EscapeUI_Game
   layers:
   - Default
   - TransparentFX
