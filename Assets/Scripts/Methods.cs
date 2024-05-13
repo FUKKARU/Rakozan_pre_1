@@ -25,8 +25,9 @@ public static class Methods
 #endif
     }
 
-    public static void StageSelect_Close(GameObject stageSelectUI)
+    public static void StageSelect_Close(GameObject stageSelectUI, GameObject difficultyUI)
     {
+        difficultyUI.SetActive(false);
         stageSelectUI.SetActive(false);
     }
 
@@ -77,5 +78,25 @@ public static class Methods
     public static void Game_HideEscape(GameObject escapeUI)
     {
         escapeUI.SetActive(false);
+    }
+
+    public static void Game_ShowMenu(GameObject menuUI)
+    {
+        menuUI.SetActive(true);
+    }
+
+    public static void Game_ShowTitleConfirmation(GameObject confirmationUI)
+    {
+        confirmationUI.SetActive(true);
+    }
+
+    public static void Game_BackToTitle()
+    {
+        SceneManager.LoadScene("Title");
+    }
+
+    public static void Game_HideTitleConfirmation(GameObject confirmationUI)
+    {
+        confirmationUI.SetActive(false);
     }
 }

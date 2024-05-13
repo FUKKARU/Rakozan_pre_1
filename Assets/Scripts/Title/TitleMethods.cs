@@ -29,16 +29,16 @@ public class TitleMethods : MonoBehaviour
     GameObject _Config;
     GameObject _Book;
     [Space(25)]
-    GameObject[] BookItems;
+    List<GameObject> BookItems;
     GameObject Description;
 
     void Start()
     {
-        GameStart.onClick.AddListener(() => Methods.Title_GameStart(StageSelect));
+        GameStart.OnClick(() => Methods.Title_GameStart(StageSelect));
 
         Menu = Instantiate(MenuPrfb, MenuParent.transform);
-        Config = "ConfigButton".FindTag().GetComponent<Button>();
-        Book = "BookButton".FindTag().GetComponent<Button>();
+        Config = "ConfigButton".FindTag<Button>();
+        Book = "BookButton".FindTag<Button>();
         _Config = "ConfigUI".FindTag();
         _Book = "BookUI".FindTag();
         BookItems = "BookItem".FindsTag();
@@ -48,36 +48,34 @@ public class TitleMethods : MonoBehaviour
         Menu.SetActive(false);
         Description.SetActive(false);
 
-        ShowMenu.onClick.AddListener(() => Methods.Title_ShowMenu(Menu));
-        Config.onClick.AddListener(() => Methods.Menu_Config(_Config, _Book));
-        Book.onClick.AddListener(() => Methods.Menu_Book(_Config, _Book));
+        ShowMenu.OnClick(() => Methods.Title_ShowMenu(Menu));
+        Config.OnClick(() => Methods.Menu_Config(_Config, _Book));
+        Book.OnClick(() => Methods.Menu_Book(_Config, _Book));
         foreach (GameObject bookItem in BookItems)
         {
             bookItem.GetComponent<Button>().onClick.AddListener(() => Methods.Menu_Book_ShowDescription(Description, bookItem.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text));
         }
 
-        Quit.onClick.AddListener(() => Methods.Title_Quit());
+        Quit.OnClick(() => Methods.Title_Quit());
 
-        Tutorial.onClick.AddListener(() => { Methods.StageSelect_StageSelect(_Difficulty); selectedStage = "Tutorial"; });
-        GameStage.onClick.AddListener(() => { Methods.StageSelect_StageSelect(_Difficulty); selectedStage = "Game"; });
-        Easy.onClick.AddListener(() => Methods.StageSelect_DifficultySelect(selectedStage, 0));
-        Normal.onClick.AddListener(() => Methods.StageSelect_DifficultySelect(selectedStage, 1));
-        Hard.onClick.AddListener(() => Methods.StageSelect_DifficultySelect(selectedStage, 2));
+        Tutorial.OnClick(() => { Methods.StageSelect_StageSelect(_Difficulty); selectedStage = "Tutorial"; });
+        GameStage.OnClick(() => { Methods.StageSelect_StageSelect(_Difficulty); selectedStage = "Game"; });
+        Easy.OnClick(() => Methods.StageSelect_DifficultySelect(selectedStage, 0));
+        Normal.OnClick(() => Methods.StageSelect_DifficultySelect(selectedStage, 1));
+        Hard.OnClick(() => Methods.StageSelect_DifficultySelect(selectedStage, 2));
     }
 
     void Update()
     {
         if (StageSelect.activeSelf && Input.GetMouseButtonDown(1))
         {
-            Methods.StageSelect_Close(StageSelect);
+            Methods.StageSelect_Close(StageSelect, _Difficulty);
         }
-
-        if (Menu.activeSelf && !Description.activeSelf && Input.GetMouseButtonDown(1))
+        else if (Menu.activeSelf && !Description.activeSelf && Input.GetMouseButtonDown(1))
         {
             Methods.Menu_Close(Menu);
         }
-
-        if (Menu.activeSelf && Description.activeSelf && Input.GetMouseButtonDown(1))
+        else if (Menu.activeSelf && Description.activeSelf && Input.GetMouseButtonDown(1))
         {
             Methods.Menu_Book_CloseDescription(Description);
         }
