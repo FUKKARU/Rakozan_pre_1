@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -134,6 +135,20 @@ namespace Ex
         public static float Clamp(this float self, float min, float max)
         {
             return Mathf.Clamp(self, min, max);
+        }
+
+        public static (int, int) DivMod(int a, int b)
+        {
+            int quotient = a / b;
+            int remainder = a % b;
+            return (quotient, remainder);
+        }
+
+        public static (int, float) DivMod(float a, float b)
+        {
+            int quotient = (int)(a / b);
+            float remainder = a % b;
+            return (quotient, remainder);
         }
     }
 
@@ -463,6 +478,31 @@ namespace Ex
                 }
             }
             return false;
+        }
+
+        public static int Len<T>(this List<T> self)
+        {
+            return self.Count;
+        }
+
+        public static int Sum(List<int> list)
+        {
+            int ret = 0;
+            foreach (int e in list)
+            {
+                ret += e;
+            }
+            return ret;
+        }
+
+        public static float Sum(List<float> list)
+        {
+            float ret = 0;
+            foreach (float e in list)
+            {
+                ret += e;
+            }
+            return ret;
         }
     }
 
