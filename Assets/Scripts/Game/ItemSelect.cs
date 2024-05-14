@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Ex;
 using TMPro;
+using System;
 
 public class ItemSelect : MonoBehaviour
 {
@@ -44,8 +45,11 @@ public class ItemSelect : MonoBehaviour
         #region Get mouse wheel input, chage selection index, and judge if UI should be shown.
         mouseWheelInput = Input.GetAxisRaw("Mouse ScrollWheel");
 
-        if (mouseWheelInput > 0.05f) SelectingIndex = Math.Scroll(items.Count, SelectingIndex, 1);
-        else if (mouseWheelInput < -0.05f) SelectingIndex = Math.Scroll(items.Count, SelectingIndex, -1);
+        if (items.Count > 0)
+        {
+            if (mouseWheelInput > 0.05f) SelectingIndex = Ex.Math.Scroll(items.Count, SelectingIndex, 1);
+            else if (mouseWheelInput < -0.05f) SelectingIndex = Ex.Math.Scroll(items.Count, SelectingIndex, -1);
+        }
 
         if (!isShowingUI && mouseWheelInput.Abs() > 0.01f) // Being wheeled.
         {
@@ -117,10 +121,7 @@ public class ItemSelect : MonoBehaviour
 
     void UpdateItemUI(List<(string, int)> itemList, List<GameObject> frameList, List<Sprite> itemImages, int index, bool isShow)
     {
-        if (itemList.Count > 0 && index >= itemList.Count)
-        {
-            throw new System.Exception("UpdateItemUI():index was outside of the itemList.");
-        }
+        if (itemList.Count > 0 && index >= itemList.Count) throw new ArgumentOutOfRangeException(nameof(itemList.Count));
 
         // Only show frames for existing item.
         Collection.Map(frameList, (e) => e.SetActive(true));

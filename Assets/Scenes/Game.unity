@@ -631,7 +631,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5a9e5220eeb9d894e928106d8f16c310, type: 3}
---- !u!1001 &3017411210810556185
+--- !u!1001 &791583123068027652
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -642,7 +642,7 @@ PrefabInstance:
     - target: {fileID: 4076464563054061400, guid: 74297ba682df6cb4f8777a77205c6a9b,
         type: 3}
       propertyPath: m_Name
-      value: Canvas_GameUI
+      value: Canvas_Game
       objectReference: {fileID: 0}
     - target: {fileID: 6502048580686154453, guid: 74297ba682df6cb4f8777a77205c6a9b,
         type: 3}
@@ -860,7 +860,7 @@ PrefabInstance:
     - target: {fileID: 6793226138803728348, guid: febe10aa048d7d542a948af8fcb14091,
         type: 3}
       propertyPath: m_Name
-      value: Canvas_Game
+      value: Canvas_Escape
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -874,7 +874,7 @@ SceneRoots:
   - {fileID: 287268255}
   - {fileID: 215802828}
   - {fileID: 1612078527}
-  - {fileID: 3017411210810556185}
+  - {fileID: 791583123068027652}
   - {fileID: 6545182024516598605}
   - {fileID: 108543484213406349}
   - {fileID: 1205527062}

@@ -104,6 +104,8 @@ namespace Ex
 
         public static int Scroll(int len, int nowIndex, int indexDelta)
         {
+            if (len <= 0) throw new ArgumentOutOfRangeException(nameof(len));
+
             nowIndex += indexDelta;
 
             if (indexDelta >= 0)
