@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,19 +7,36 @@ using TMPro;
 
 public class ItemSelect : MonoBehaviour
 {
+    // Right is index 0.
+
     GameMethods GameMethods;
 
-    public GameObject[] ItemFrames; // left is 0.
-    public Sprite[] ItemImages; // 0 is "1", 4 is "5".
-    int selectingIndex = 0; // right is 0
-
-    Dictionary<string, int> items = new Dictionary<string, int>() // 1st => 5th
+    public List<GameObject> ItemFrames;
+    public List<Sprite> ItemImages; // o is "1", 4 is "5".
+    int selectingIndex = 0;
+    int SelectingIndex
     {
-        {"1", 1 },
-        {"2", 0 },
-        {"3", 1 },
-        {"4", 3 },
-        {"5", 2 },
+        get
+        {
+            return selectingIndex;
+        }
+        set
+        {
+            selectingIndex = value.Clamp(0, ItemFrames.Count - 1);
+        }
+    }
+
+    float mouseWheelInput = 0;
+    const float itemShowTime = 2;
+    float itemShowingTime = 0;
+    bool isShowingUI = false;
+
+    List<(string, int)> items = new()
+    {
+        ("1", 1),
+        ("4", 3),
+        ("5", 2),
+        ("3", 1)
     };
 
     void Start()
@@ -30,71 +46,103 @@ public class ItemSelect : MonoBehaviour
 
     void Update()
     {
-        Dictionary<string, int> existingItems = new(); // 1st => 5th
-        foreach (int i in Collection.Range(5))
+        UpdateItemUI();
+
+        // Get mouse wheel input, and judge if UI should be shown.
+        mouseWheelInput = Input.GetAxisRaw("Mouse ScrollWheel");
+        if (Mathf.Abs(mouseWheelInput) < 0.01f)
         {
-            if (items[(i + 1).ToString()] != 0)
+            itemShowingTime += Time.deltaTime;
+            if (itemShowingTime >= itemShowTime)
             {
-                existingItems[(i + 1).ToString()] = items[(i + 1).ToString()];
+                itemShowingTime = 0;
+
+                isShowingUI = false;
             }
         }
-        foreach (GameObject itemFrame in ItemFrames)
+        else
         {
-            itemFrame.SetActive(true);
-        }
-        foreach (int i in Collection.Range(items.Count - existingItems.Count))
-        {
-            ItemFrames[i].SetActive(false);
+            itemShowingTime = 0;
+
+            isShowingUI = true;
         }
 
-        // right is 1st, left is 5th.
-        int idx = 4;
-        foreach (var e in existingItems)
+        // Add/Sub an item.
+        if (!GameMethods.Escape.activeSelf)
         {
-            ItemFrames[idx].transform.GetChild(0).GetComponent<Image>().sprite = ItemImages[int.Parse(e.Key) - 1];
-            ItemFrames[idx].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = $"*{e.Value}";
-            idx--;
-        }
-
-        selectingIndex = Mathf.Clamp(selectingIndex, 0, existingItems.Count - 1);
-        float mouseWheelInput = Input.GetAxisRaw("Mouse ScrollWheel");
-        if (mouseWheelInput > 0.05f)
-        {
-            if (++selectingIndex >= existingItems.Count)
+            if (Input.GetMouseButtonDown(1) && items.Count > 0)
             {
-                selectingIndex = 0;
-            }
-        }
-        else if (mouseWheelInput < -0.05f)
-        {
-            if (--selectingIndex <= -1)
-            {
-                selectingIndex = existingItems.Count - 1;
-            }
-        }
-        selectingIndex = Mathf.Clamp(selectingIndex, 0, existingItems.Count - 1);
-        foreach (int i in Collection.Range(existingItems.Count))
-        {
-            Color col = ItemFrames[-(i + 1) + items.Count].GetComponent<Image>().color;
-            col.a = i == selectingIndex ? 1 : 100 / 255f;
-            ItemFrames[-(i + 1) + items.Count].GetComponent<Image>().color = col;
-        }
+                SelectingIndex.Clamp(0, ItemFrames.Count - 1);
 
+                int usingItemNum = ItemImages.IndexOf(ItemFrames[SelectingIndex].GetChildComponent<Image>(0).sprite) + 1;
 
+                bool isKeyDeleted = items.Sub(usingItemNum.ToString());
 
-        if (!GameMethods.Escape.activeSelf && Input.GetMouseButtonDown(1))
-        {
-            int usingItemNum = -1;
-            foreach (GameObject itemFrame in ItemFrames)
-            {
-                if (itemFrame.GetComponent<Image>().color.a >= 0.9f)
+                if (isKeyDeleted)
                 {
-                    usingItemNum = Array.IndexOf(ItemImages, itemFrame.transform.GetChild(0).GetComponent<Image>().sprite) + 1;
-                    usingItemNum.Show();
+                    while (SelectingIndex > items.Count - 1 && items.Count > 0) SelectingIndex--;
                 }
+
+                UpdateItemUI();
             }
-            
-            items[usingItemNum.ToString()] = Mathf.Clamp(items[usingItemNum.ToString()] - 1, 0, 99);
+            else if (Input.GetKeyDown(KeyCode.Alpha1)) { items.Add("1"); UpdateItemUI(); }
+            else if (Input.GetKeyDown(KeyCode.Alpha2)) { items.Add("2"); UpdateItemUI(); }
+            else if (Input.GetKeyDown(KeyCode.Alpha3)) { items.Add("3"); UpdateItemUI(); }
+            else if (Input.GetKeyDown(KeyCode.Alpha4)) { items.Add("4"); UpdateItemUI(); }
+            else if (Input.GetKeyDown(KeyCode.Alpha5)) { items.Add("5"); UpdateItemUI(); }
+        }
+    }
+
+    void UpdateItemUI()
+    {
+        if (isShowingUI)
+        {
+            DisplayItems();
+        }
+        else
+        {
+            if (items.Count > 0)
+            {
+                int usingItemNum = ItemImages.IndexOf(ItemFrames[SelectingIndex].GetChildComponent<Image>(0).sprite) + 1;
+                (string, int) selectingItem = items.Find(usingItemNum.ToString());
+                items.Remove(selectingItem);
+                items.Insert(0, selectingItem);
+
+                selectingIndex = 0;
+
+                DisplayItems();
+
+                Collection.Map(ItemFrames, (e) => e.SetActive(false));
+                ItemFrames[0].SetActive(true);
+            }
+        }
+    }
+
+    void DisplayItems()
+    {
+        // Only show frames for existing item.
+        Collection.Map(ItemFrames, (e) => e.SetActive(true));
+        Collection.Map(
+            Collection.Range(ItemFrames.Count - items.Count),
+            (e) => ItemFrames[-(e + 1) + ItemFrames.Count].SetActive(false));
+
+        // Set sprite and text.
+        foreach ((int i, (string key, int value)) in Collection.Enumerate(items))
+        {
+            ItemFrames[i].GetChildComponent<Image>(0).sprite = ItemImages[int.Parse(key) - 1];
+            ItemFrames[i].GetChildComponent<TextMeshProUGUI>(1).text = $"*{value}";
+        }
+
+        // Change the selecting item.
+        if (mouseWheelInput > 0.05f) SelectingIndex = Math.Scroll(items.Count, SelectingIndex, 1);
+        else if (mouseWheelInput < -0.05f) SelectingIndex = Math.Scroll(items.Count, SelectingIndex, -1);
+
+        // Paint the selecting frame with black.
+        foreach (int i in Collection.Range(items.Count))
+        {
+            Color col = ItemFrames[i].GetComponent<Image>().color;
+            col.a = i == SelectingIndex ? 1 : 100 / 255f;
+            ItemFrames[i].GetComponent<Image>().color = col;
         }
     }
 }
