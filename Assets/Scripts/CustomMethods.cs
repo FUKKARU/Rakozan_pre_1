@@ -52,6 +52,16 @@ namespace Ex
             return (a - b).sqrMagnitude >= Mathf.Pow(d, 2);
         }
 
+        public static int Abs(this int sc)
+        {
+            return Mathf.Abs(sc);
+        }
+
+        public static float Abs(this float sc)
+        {
+            return Mathf.Abs(sc);
+        }
+
         public static float Cos(this float theta)
         {
             return Mathf.Cos(theta);
@@ -417,6 +427,7 @@ namespace Ex
             throw new Exception();
         }
 
+        /// <summary>Return true if the key was found.</summary>
         public static bool Target<T>(this List<(string, T)> self, string key, Func<(string, T), (string, T)> funcIfFound, Action<string> actIfNotFound)
         {
             for (int i = 0; i < self.Count; i++)
@@ -431,6 +442,7 @@ namespace Ex
             return false;
         }
 
+        /// <summary>Return true if the key was found.</summary>
         public static bool Target<T>(this List<(string, T)> self, string key, Func<(string, T), bool> conditionOnFound, Action<(string, T)> actIfTrue, Action<(string, T)> actIfFalse)
         {
             for (int i = 0; i < self.Count; i++)

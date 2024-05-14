@@ -7,7 +7,7 @@ using TMPro;
 
 public class ItemSelect : MonoBehaviour
 {
-    // Right is index 0.
+    // Right is 0th.
 
     GameMethods GameMethods;
 
@@ -16,16 +16,9 @@ public class ItemSelect : MonoBehaviour
     int selectingIndex = 0;
     int SelectingIndex
     {
-        get
-        {
-            return selectingIndex;
-        }
-        set
-        {
-            selectingIndex = value.Clamp(0, ItemFrames.Count - 1);
-        }
+        get { return selectingIndex; }
+        set { selectingIndex = value.Clamp(0, ItemFrames.Count - 1); }
     }
-
     float mouseWheelInput = 0;
     const float itemShowTime = 2;
     float itemShowingTime = 0;
@@ -44,18 +37,41 @@ public class ItemSelect : MonoBehaviour
         GameMethods = "GameMethods".FindTag<GameMethods>();
     }
 
+
+
     void Update()
     {
-        UpdateItemUI();
-
-        // Get mouse wheel input, and judge if UI should be shown.
+        #region Get mouse wheel input, chage selection index, and judge if UI should be shown.
         mouseWheelInput = Input.GetAxisRaw("Mouse ScrollWheel");
-        if (Mathf.Abs(mouseWheelInput) < 0.01f)
+
+        if (mouseWheelInput > 0.05f) SelectingIndex = Math.Scroll(items.Count, SelectingIndex, 1);
+        else if (mouseWheelInput < -0.05f) SelectingIndex = Math.Scroll(items.Count, SelectingIndex, -1);
+
+        if (!isShowingUI && mouseWheelInput.Abs() > 0.01f) // Being wheeled.
+        {
+            itemShowingTime = 0;
+
+            isShowingUI = true;
+        }
+        else if (isShowingUI && mouseWheelInput.Abs() < 0.01f) // Not being wheeled.
         {
             itemShowingTime += Time.deltaTime;
+
             if (itemShowingTime >= itemShowTime)
             {
                 itemShowingTime = 0;
+
+                if (items.Count > 0)
+                {
+                    // A number drawn on the image.
+                    int usingItemNum = ItemImages.IndexOf(ItemFrames[SelectingIndex].GetChildComponent<Image>(0).sprite) + 1;
+
+                    // Move the selecting item to the 1st.
+                    (string, int) selectingItem = items.Find(usingItemNum.ToString());
+                    items.Remove(selectingItem);
+                    items.Insert(0, selectingItem);
+                    selectingIndex = 0;
+                }
 
                 isShowingUI = false;
             }
@@ -63,86 +79,74 @@ public class ItemSelect : MonoBehaviour
         else
         {
             itemShowingTime = 0;
-
-            isShowingUI = true;
         }
+        #endregion
 
-        // Add/Sub an item.
+        #region Add/Sub an item.
         if (!GameMethods.Escape.activeSelf)
         {
-            if (Input.GetMouseButtonDown(1) && items.Count > 0)
+            if (Input.GetMouseButtonDown(1) && items.Count > 0) // Sub.
             {
-                SelectingIndex.Clamp(0, ItemFrames.Count - 1);
+                int savedItemNum = items.Count;
 
+                // A number drawn on the image.
                 int usingItemNum = ItemImages.IndexOf(ItemFrames[SelectingIndex].GetChildComponent<Image>(0).sprite) + 1;
 
-                bool isKeyDeleted = items.Sub(usingItemNum.ToString());
+                // Sub.
+                bool isExistingItemRemoved = items.Sub(usingItemNum.ToString());
 
-                if (isKeyDeleted)
+                // The item was consumed up.
+                if (items.Count > 0)
                 {
-                    while (SelectingIndex > items.Count - 1 && items.Count > 0) SelectingIndex--;
+                    if (isExistingItemRemoved && items.Count < savedItemNum)
+                    {
+                        while (SelectingIndex > items.Count - 1) SelectingIndex--;
+                    }
                 }
-
-                UpdateItemUI();
             }
-            else if (Input.GetKeyDown(KeyCode.Alpha1)) { items.Add("1"); UpdateItemUI(); }
-            else if (Input.GetKeyDown(KeyCode.Alpha2)) { items.Add("2"); UpdateItemUI(); }
-            else if (Input.GetKeyDown(KeyCode.Alpha3)) { items.Add("3"); UpdateItemUI(); }
-            else if (Input.GetKeyDown(KeyCode.Alpha4)) { items.Add("4"); UpdateItemUI(); }
-            else if (Input.GetKeyDown(KeyCode.Alpha5)) { items.Add("5"); UpdateItemUI(); }
+            else if (Input.GetKeyDown(KeyCode.Alpha1)) items.Add("1"); // Add.
+            else if (Input.GetKeyDown(KeyCode.Alpha2)) items.Add("2"); // Add.
+            else if (Input.GetKeyDown(KeyCode.Alpha3)) items.Add("3"); // Add.
+            else if (Input.GetKeyDown(KeyCode.Alpha4)) items.Add("4"); // Add.
+            else if (Input.GetKeyDown(KeyCode.Alpha5)) items.Add("5"); // Add.
         }
+        #endregion
+
+        UpdateItemUI(items, ItemFrames, ItemImages, SelectingIndex, isShowingUI);
     }
 
-    void UpdateItemUI()
+    void UpdateItemUI(List<(string, int)> itemList, List<GameObject> frameList, List<Sprite> itemImages, int index, bool isShow)
     {
-        if (isShowingUI)
+        if (itemList.Count > 0 && index >= itemList.Count)
         {
-            DisplayItems();
+            throw new System.Exception("UpdateItemUI():index was outside of the itemList.");
         }
-        else
-        {
-            if (items.Count > 0)
-            {
-                int usingItemNum = ItemImages.IndexOf(ItemFrames[SelectingIndex].GetChildComponent<Image>(0).sprite) + 1;
-                (string, int) selectingItem = items.Find(usingItemNum.ToString());
-                items.Remove(selectingItem);
-                items.Insert(0, selectingItem);
 
-                selectingIndex = 0;
-
-                DisplayItems();
-
-                Collection.Map(ItemFrames, (e) => e.SetActive(false));
-                ItemFrames[0].SetActive(true);
-            }
-        }
-    }
-
-    void DisplayItems()
-    {
         // Only show frames for existing item.
-        Collection.Map(ItemFrames, (e) => e.SetActive(true));
+        Collection.Map(frameList, (e) => e.SetActive(true));
         Collection.Map(
-            Collection.Range(ItemFrames.Count - items.Count),
-            (e) => ItemFrames[-(e + 1) + ItemFrames.Count].SetActive(false));
+            Collection.Range(frameList.Count - itemList.Count),
+            (i) => frameList[-(i + 1) + frameList.Count].SetActive(false));
 
         // Set sprite and text.
-        foreach ((int i, (string key, int value)) in Collection.Enumerate(items))
+        foreach ((int i, (string key, int value)) in Collection.Enumerate(itemList))
         {
-            ItemFrames[i].GetChildComponent<Image>(0).sprite = ItemImages[int.Parse(key) - 1];
-            ItemFrames[i].GetChildComponent<TextMeshProUGUI>(1).text = $"*{value}";
+            frameList[i].GetChildComponent<Image>(0).sprite = itemImages[int.Parse(key) - 1];
+            frameList[i].GetChildComponent<TextMeshProUGUI>(1).text = $"*{value}";
         }
 
-        // Change the selecting item.
-        if (mouseWheelInput > 0.05f) SelectingIndex = Math.Scroll(items.Count, SelectingIndex, 1);
-        else if (mouseWheelInput < -0.05f) SelectingIndex = Math.Scroll(items.Count, SelectingIndex, -1);
-
         // Paint the selecting frame with black.
-        foreach (int i in Collection.Range(items.Count))
+        foreach ((int i, GameObject e) in Collection.Enumerate(frameList))
         {
-            Color col = ItemFrames[i].GetComponent<Image>().color;
-            col.a = i == SelectingIndex ? 1 : 100 / 255f;
-            ItemFrames[i].GetComponent<Image>().color = col;
+            Color col = e.GetComponent<Image>().color;
+            col.a = i == index ? 1 : 100 / 255f;
+            e.GetComponent<Image>().color = col;
+        }
+
+        if (!isShow)
+        {
+            Collection.Map(frameList, (e) => e.SetActive(false));
+            if (itemList.Count > 0) frameList[0].SetActive(true);
         }
     }
 }

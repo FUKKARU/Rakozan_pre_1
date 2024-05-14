@@ -7,11 +7,6 @@ public class DifficultyCheck : MonoBehaviour
 {
     void Start()
     {
-        Difficulty.Dif.Show();
-    }
-
-    void Update()
-    {
-        
+        Difficulty.Dif.Show("Difficulty");
     }
 }

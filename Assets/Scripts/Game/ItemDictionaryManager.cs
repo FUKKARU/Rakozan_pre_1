@@ -5,13 +5,14 @@ using UnityEngine;
 
 public static class ItemDictionaryManager
 {
+    // Return true if the new item was added.
     public static bool Add(this List<(string, int)> items, string key)
     {
         bool isFound = items.Target(key, (e) => (e.Item1, e.Item2 + 1), (key) => items.Add((key, 1)));
-        return isFound && items.Count <= 1;
+        return !isFound;
     }
 
-    // return true if the key was removed.
+    // Return true if the existing item was removed.
     public static bool Sub(this List<(string, int)> items, string key)
     {
         bool isFound = items.Target(key, (e) => (e.Item1, e.Item2 - 1), (s) => Flow.Pass());
