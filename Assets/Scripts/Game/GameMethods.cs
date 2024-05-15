@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Math = Ex.Math;
 
 public class GameMethods : MonoBehaviour
 {
@@ -73,10 +74,7 @@ public class GameMethods : MonoBehaviour
         if (!Escape.activeSelf && Input.GetKeyDown(KeyCode.Escape))
         {
             Time.timeScale = 0;
-            int min = (int)(time / 60);
-            float time_ = time - min * 60;
-            int sec = (int)time_;
-            int thi = (int)((time_ - sec) * 100);
+            (int min, int sec, int thi) = time.NormalizedTime();
             _Time.text = $"{min.ToString("D2")}:{sec.ToString("D2")}:{thi.ToString("D2")}";
             Methods.Game_ShowEscape(Escape);
         }

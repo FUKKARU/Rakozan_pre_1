@@ -150,6 +150,14 @@ namespace Ex
             float remainder = a % b;
             return (quotient, remainder);
         }
+
+        public static (int, int, int) NormalizedTime(this float time)
+        {
+            (int min, float time_) = DivMod(time, 60);
+            (int sec, float thi_) = DivMod(time_ * 100, 100);
+            int thi = (int)thi_;
+            return (min, sec, thi);
+        }
     }
 
     public static class Random
@@ -519,6 +527,21 @@ namespace Ex
         public static void Pass()
         {
             return;
+        }
+
+        public static T Pass<T>(T value)
+        {
+            return value;
+        }
+
+        public static void PassSelf<T1>(this T1 self)
+        {
+            return;
+        }
+
+        public static T2 PassSelf<T1, T2>(this T1 self, T2 value)
+        {
+            return value;
         }
     }
 
