@@ -22,6 +22,15 @@ public static class ItemDictionaryManager
 
     static void Reflesh(this List<(string, int)> items, string key)
     {
-        items.Target(key, (e) => e.Item2 <= 0, (e) => items.Remove(e), (e) => Flow.Pass());
+        for (int i = 0; i < items.Count; i++)
+        {
+            if (items[i].Item1 == key)
+            {
+                if (items[i].Item2 <= 0)
+                {
+                    items.Remove((items[i].Item1, items[i].Item2));
+                }
+            }
+        }
     }
 }

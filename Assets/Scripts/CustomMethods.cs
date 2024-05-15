@@ -467,27 +467,6 @@ namespace Ex
             return false;
         }
 
-        /// <summary>Return true if the key was found.</summary>
-        public static bool Target<T>(this List<(string, T)> self, string key, Func<(string, T), bool> conditionOnFound, Action<(string, T)> actIfTrue, Action<(string, T)> actIfFalse)
-        {
-            for (int i = 0; i < self.Count; i++)
-            {
-                if (self[i].Item1 == key)
-                {
-                    if (conditionOnFound((self[i].Item1, self[i].Item2)))
-                    {
-                        actIfTrue((self[i].Item1, self[i].Item2));
-                    }
-                    else
-                    {
-                        actIfFalse((self[i].Item1, self[i].Item2));
-                    }
-                    return true;
-                }
-            }
-            return false;
-        }
-
         public static int Len<T>(this List<T> self)
         {
             return self.Count;
