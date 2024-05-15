@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 namespace Ex
@@ -158,6 +155,21 @@ namespace Ex
             int thi = (int)thi_;
             return (min, sec, thi);
         }
+
+        public static int Round2(float sc)
+        {
+            return (int)System.Math.Round(sc, 0, MidpointRounding.AwayFromZero);
+        }
+
+        public static int Rounded(this float sc)
+        {
+            return (int)Mathf.Round(sc);
+        }
+
+        public static int Rounded2(this float sc)
+        {
+            return (int)System.Math.Round(sc, 0, MidpointRounding.AwayFromZero);
+        }
     }
 
     public static class Random
@@ -237,10 +249,22 @@ namespace Ex
 
         public static List<int> Range(int start, int stop, int step)
         {
+            if (step == 0) throw new Exception("InfinityLoop.");
+
             List<int> ret = new();
-            for (int i = start; i < stop; i += step)
+            if (step > 0)
             {
-                ret.Add(i);
+                for (int i = start; i < stop; i += step)
+                {
+                    ret.Add(i);
+                }
+            }
+            else
+            {
+                for (int i = start; i > stop; i += step)
+                {
+                    ret.Add(i);
+                }
             }
             return ret;
         }
@@ -490,6 +514,72 @@ namespace Ex
                 ret += e;
             }
             return ret;
+        }
+
+        public static List<T> Slice<T>(this List<T> self, int stop)
+        {
+            List<T> ret = new();
+            for (int i = 0; i < stop; i++)
+            {
+                ret.Add(self[i]);
+            }
+            return ret;
+        }
+
+        public static List<T> Slice<T>(this List<T> self, int start, int stop)
+        {
+            List<T> ret = new();
+            for (int i = start; i < stop; i++)
+            {
+                ret.Add(self[i]);
+            }
+            return ret;
+        }
+
+        public static List<T> Slice<T>(this List<T> self, int start, int stop, int step)
+        {
+            if (step == 0) throw new Exception("InfinityLoop.");
+
+            List<T> ret = new();
+            if (step > 0)
+            {
+                for (int i = start; i < stop; i += step)
+                {
+                    ret.Add(self[i]);
+                }
+            }
+            else
+            {
+                for (int i = start; i > stop; i += step)
+                {
+                    ret.Add(self[i]);
+                }
+            }
+            return ret;
+        }
+
+        public static List<T> Reversed<T>(this List<T> self)
+        {
+            List<T> ret = new();
+            for (int i = self.Count - 1; i >= 0; i--)
+            {
+                ret.Add(self[i]);
+            }
+            return ret;
+        }
+
+        public static List<T> Sorted<T>(this List<T> self, bool isSmall2Big = true) where T : IComparable<T>
+        {
+            List<T> copiedSelf = new(self);
+            if (isSmall2Big)
+            {
+                copiedSelf.Sort();
+            }
+            else
+            {
+                copiedSelf.Sort((a, b) => b.CompareTo(a));
+            }
+            return copiedSelf;
         }
     }
 
