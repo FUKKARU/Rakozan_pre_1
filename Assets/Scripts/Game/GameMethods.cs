@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Math = Ex.Math;
 
 public class GameMethods : MonoBehaviour
 {

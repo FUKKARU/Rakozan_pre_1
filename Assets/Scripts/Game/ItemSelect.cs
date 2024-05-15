@@ -14,6 +14,7 @@ public class ItemSelect : MonoBehaviour
 
     public List<GameObject> ItemFrames;
     public List<Sprite> ItemImages; // o is "1", 4 is "5".
+    public List<GameObject> HotaruNums; // <Left is 0th!>
     int selectingIndex = 0;
     int SelectingIndex
     {
@@ -144,10 +145,17 @@ public class ItemSelect : MonoBehaviour
             e.GetComponent<Image>().color = col;
         }
 
+        // Show Hotaru amount.
+        Collection.Map(Collection.Enumerate(HotaruNums), (e) => e.Item2.GetComponent<Image>().enabled = e.Item1 < GameData.HotaruNum ? true : false);
+
         if (!isShow)
         {
+            // Hide item UI.
             Collection.Map(frameList, (e) => e.SetActive(false));
             if (itemList.Count > 0) frameList[0].SetActive(true);
+
+            // Hide Hotaru amount.
+            Collection.Map(HotaruNums, (e) => e.GetComponent<Image>().enabled = false);
         }
     }
 }

@@ -38,7 +38,7 @@ public static class Methods
 
     public static void StageSelect_DifficultySelect(string sceneName, int dif)
     {
-        Difficulty.Dif = dif;
+        GameData.Difficulty = dif;
         SceneManager.LoadScene(sceneName);
     }
 
@@ -92,6 +92,7 @@ public static class Methods
 
     public static void Game_BackToTitle()
     {
+        Time.timeScale = 1;
         SceneManager.LoadScene("Title");
     }
 

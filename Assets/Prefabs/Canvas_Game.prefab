@@ -1915,6 +1915,12 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 14cea75deb8523140a7c97b129713e91, type: 3}
   - {fileID: 21300000, guid: 01f5822255be887479ec65fd48c67ea4, type: 3}
   - {fileID: 21300000, guid: a2500824d3a83a844a8e79cbe0800f43, type: 3}
+  HotaruNums:
+  - {fileID: 6997370897499366400}
+  - {fileID: 1532434285779484225}
+  - {fileID: 1597752344450977429}
+  - {fileID: 7933050191140323502}
+  - {fileID: 2580827522031362881}
 --- !u!1 &4077569160223543032
 GameObject:
   m_ObjectHideFlags: 0

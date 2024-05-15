@@ -7,6 +7,6 @@ public class DifficultyCheck : MonoBehaviour
 {
     void Start()
     {
-        Difficulty.Dif.Show("Difficulty");
+        GameData.Difficulty.Show("Difficulty");
     }
 }
