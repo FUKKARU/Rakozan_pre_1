@@ -70,7 +70,7 @@ public class GameMethods : MonoBehaviour
 
     void Update()
     {
-        if (!Escape.activeSelf && Input.GetKeyDown(KeyCode.Escape))
+        if (!Escape.activeSelf && KeyCode.Escape.Down())
         {
             Time.timeScale = 0;
             (int min, int sec, int thi) = time.NormalizedTime();
@@ -78,16 +78,16 @@ public class GameMethods : MonoBehaviour
             Methods.Game_ShowEscape(Escape);
         }
 
-        if (Escape.activeSelf && !Menu.activeSelf && !Confirmation.activeSelf && Input.GetMouseButtonDown(1))
+        if (Escape.activeSelf && !Menu.activeSelf && !Confirmation.activeSelf && 1.MouseDown())
         {
             Methods.Game_HideEscape(Escape);
             Time.timeScale = 1;
         }
-        else if (Escape.activeSelf && Menu.activeSelf && !Description.activeSelf && Input.GetMouseButtonDown(1))
+        else if (Escape.activeSelf && Menu.activeSelf && !Description.activeSelf && 1.MouseDown())
         {
             Methods.Menu_Close(Menu);
         }
-        else if (Escape.activeSelf && Menu.activeSelf && Description.activeSelf && Input.GetMouseButtonDown(1))
+        else if (Escape.activeSelf && Menu.activeSelf && Description.activeSelf && 1.MouseDown())
         {
             Methods.Menu_Book_CloseDescription(Description);
         }

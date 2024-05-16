@@ -44,7 +44,7 @@ public class ItemSelect : MonoBehaviour
     void Update()
     {
         #region Get mouse wheel input, chage selection index, and judge if UI should be shown.
-        mouseWheelInput = Input.GetAxisRaw("Mouse ScrollWheel");
+        mouseWheelInput = UnityEngine.Input.GetAxisRaw("Mouse ScrollWheel");
 
         if (items.Count > 0)
         {
@@ -90,7 +90,7 @@ public class ItemSelect : MonoBehaviour
         #region Add/Sub an item.
         if (!GameMethods.Escape.activeSelf)
         {
-            if (Input.GetMouseButtonDown(1) && items.Count > 0) // Sub.
+            if (1.MouseDown() && items.Count > 0) // Sub.
             {
                 int savedItemNum = items.Count;
 
@@ -109,11 +109,11 @@ public class ItemSelect : MonoBehaviour
                     }
                 }
             }
-            else if (Input.GetKeyDown(KeyCode.Alpha1)) items.Add("1"); // Add.
-            else if (Input.GetKeyDown(KeyCode.Alpha2)) items.Add("2"); // Add.
-            else if (Input.GetKeyDown(KeyCode.Alpha3)) items.Add("3"); // Add.
-            else if (Input.GetKeyDown(KeyCode.Alpha4)) items.Add("4"); // Add.
-            else if (Input.GetKeyDown(KeyCode.Alpha5)) items.Add("5"); // Add.
+            else if (KeyCode.Alpha1.Down()) items.Add("1"); // Add.
+            else if (KeyCode.Alpha2.Down()) items.Add("2"); // Add.
+            else if (KeyCode.Alpha3.Down()) items.Add("3"); // Add.
+            else if (KeyCode.Alpha4.Down()) items.Add("4"); // Add.
+            else if (KeyCode.Alpha5.Down()) items.Add("5"); // Add.
         }
         #endregion
 
@@ -146,7 +146,7 @@ public class ItemSelect : MonoBehaviour
         }
 
         // Show Hotaru amount.
-        Collection.Map(Collection.Enumerate(HotaruNums), (e) => e.Item2.GetComponent<Image>().enabled = e.Item1 < GameData.HotaruNum ? true : false);
+        Collection.Map(Collection.Enumerate(HotaruNums), (e) => e.value.GetComponent<Image>().enabled = e.index < GameData.HotaruNum);
 
         if (!isShow)
         {

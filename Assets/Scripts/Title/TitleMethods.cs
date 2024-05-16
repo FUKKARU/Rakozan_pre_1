@@ -67,15 +67,15 @@ public class TitleMethods : MonoBehaviour
 
     void Update()
     {
-        if (StageSelect.activeSelf && Input.GetMouseButtonDown(1))
+        if (StageSelect.activeSelf && 1.MouseDown())
         {
             Methods.StageSelect_Close(StageSelect, _Difficulty);
         }
-        else if (Menu.activeSelf && !Description.activeSelf && Input.GetMouseButtonDown(1))
+        else if (Menu.activeSelf && !Description.activeSelf && 1.MouseDown())
         {
             Methods.Menu_Close(Menu);
         }
-        else if (Menu.activeSelf && Description.activeSelf && Input.GetMouseButtonDown(1))
+        else if (Menu.activeSelf && Description.activeSelf && 1.MouseDown())
         {
             Methods.Menu_Book_CloseDescription(Description);
         }
