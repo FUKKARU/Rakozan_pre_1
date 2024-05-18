@@ -73,12 +73,16 @@ public static class Methods
     public static void Game_ShowEscape(GameObject escapeUI)
     {
         escapeUI.SetActive(true);
+
+        Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
 
     public static void Game_HideEscape(GameObject escapeUI)
     {
         escapeUI.SetActive(false);
+
+        Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 

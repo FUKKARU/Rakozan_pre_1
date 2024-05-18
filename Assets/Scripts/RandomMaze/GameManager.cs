@@ -2,7 +2,6 @@ using Ex;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -31,8 +30,6 @@ namespace RandomMaze
         [SerializeField] GameObject gameUI;
         [SerializeField] GameObject clearUI;
 
-        // 時間が繰り上がる境界（sec => min, com => min）
-        readonly int[] timeConst = new int[] { 60, 100 };
         // 時間の表記を何桁揃えにするか
         const int digits = 2;
 
@@ -43,6 +40,9 @@ namespace RandomMaze
 
         void Start()
         {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
             timer = gameUI.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
 
             gameUI.SetActive(true);
